@@ -1,3 +1,8 @@
 please just add this map component so it shows up to next to the chat, but dont connect the two yet
 
 ok nice, now please edit the map component such that there are specific functions to 1: list each plotted location, 2.get a plotted location by it's unique id (add a unique id--the first 16 digits of the address hash) to the data structure and all functions that need to interact wiht it, and 3. add a new location by address(allow passing in notes and a color, this wil have to resolve the addreoss), and an option to delete a location. we will then expose these as tools to the chatbot, but in the next step--dont do that yet
+
+ok thats a good first step please make it call the actual component apis?
+
+ok now the tool call works, but it doesnt actualy show up on the map, and the list all locations button prints an empty array stil . i think its cuzse of server/client state issues. does this help? : [docs on data persistance]
+
