@@ -16,6 +16,7 @@ import {
 import { openai } from "@ai-sdk/openai";
 import { processToolCalls, cleanupMessages } from "./utils";
 import { tools, executions } from "./tools";
+import type { MarkerData } from "./mapStore";
 // import { env } from "cloudflare:workers";
 
 const model = openai("gpt-4o-2024-11-20");
@@ -26,9 +27,24 @@ const model = openai("gpt-4o-2024-11-20");
 // });
 
 /**
+ * Map state interface for the agent
+ */
+interface MapState {
+  markers: MarkerData[];
+  mapCenter: [number, number];
+  mapZoom: number;
+}
+
+/**
  * Chat Agent implementation that handles real-time AI chat interactions
  */
-export class Chat extends AIChatAgent<Env> {
+export class Chat extends AIChatAgent<Env, MapState> {
+  // Set initial state for the map
+  initialState: MapState = {
+    markers: [],
+    mapCenter: [51.505, -0.09], // Default to London
+    mapZoom: 2
+  };
   /**
    * Handles incoming chat messages and manages the response stream
    */

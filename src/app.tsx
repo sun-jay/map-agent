@@ -14,6 +14,7 @@ import { Toggle } from "@/components/toggle/Toggle";
 import { Textarea } from "@/components/textarea/Textarea";
 import { MemoizedMarkdown } from "@/components/memoized-markdown";
 import { ToolInvocationCard } from "@/components/tool-invocation-card/ToolInvocationCard";
+import MapComponent from "@/components/map/MapComponent";
 
 // Icon imports
 import {
@@ -29,7 +30,7 @@ import {
 // List of tools that require human confirmation
 // NOTE: this should match the tools that don't have execute functions in tools.ts
 const toolsRequiringConfirmation: (keyof typeof tools)[] = [
-  "getWeatherInformation"
+  // Currently no tools require confirmation - all map tools execute automatically
 ];
 
 export default function Chat() {
@@ -136,9 +137,10 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-[100vh] w-full p-4 flex justify-center items-center bg-fixed overflow-hidden">
+    <div className="h-[100vh] w-full p-4 flex gap-4 bg-fixed overflow-hidden">
       <HasOpenAIKey />
-      <div className="h-[calc(100vh-2rem)] w-full mx-auto max-w-lg flex flex-col shadow-xl rounded-md overflow-hidden relative border border-neutral-300 dark:border-neutral-800">
+      {/* Chat Panel */}
+      <div className="h-[calc(100vh-2rem)] w-full max-w-lg flex flex-col shadow-xl rounded-md overflow-hidden relative border border-neutral-300 dark:border-neutral-800 flex-shrink-0">
         <div className="px-4 py-3 border-b border-neutral-300 dark:border-neutral-800 flex items-center gap-3 sticky top-0 z-10">
           <div className="flex items-center justify-center h-8 w-8">
             <svg
@@ -209,11 +211,15 @@ export default function Chat() {
                   <ul className="text-sm text-left space-y-2">
                     <li className="flex items-center gap-2">
                       <span className="text-[#F48120]">•</span>
-                      <span>Weather information for any city</span>
+                      <span>Adding locations to the map</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <span className="text-[#F48120]">•</span>
-                      <span>Local time in different locations</span>
+                      <span>Listing and managing map locations</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-[#F48120]">•</span>
+                      <span>Scheduling tasks and reminders</span>
                     </li>
                   </ul>
                 </div>
@@ -411,6 +417,11 @@ export default function Chat() {
             </div>
           </div>
         </form>
+      </div>
+      
+      {/* Map Panel */}
+      <div className="h-[calc(100vh-2rem)] flex-1 rounded-md overflow-hidden relative border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950">
+        <MapComponent />
       </div>
     </div>
   );
