@@ -1,7 +1,9 @@
 
 # Mapper: Cursor for Maps
 
+
 ## **Live demo:** [https://map-agent.sunny-jyrm.workers.dev/](https://map-agent.sunny-jyrm.workers.dev/)
+### Build upon the Cloudflare agents framework (9/10 developer experience BTW! Good Job!)
 
 ## Quick Start
 
