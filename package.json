@@ -7,6 +7,9 @@
   "scripts": {
     "start": "vite dev",
     "deploy": "vite build && wrangler deploy",
+    "deploy:geocoding": "wrangler deploy --config wrangler-geocoding.jsonc",
+    "deploy:all": "npm run deploy:geocoding && npm run deploy",
+    "dev:geocoding": "wrangler dev --config wrangler-geocoding.jsonc",
     "test": "vitest",
     "types": "wrangler types env.d.ts --include-runtime false",
     "format": "prettier --write .",

@@ -10,36 +10,50 @@ import { getCurrentAgent } from "agents";
 import { scheduleSchema } from "agents/schedule";
 import { generateLocationId, markerColors, type MarkerData } from "./mapStore";
 
-// Geocoding function for server-side use
+// Geocoding function that calls the dedicated geocoding worker
 interface SearchResult {
   lat: string;
   lon: string;
   display_name: string;
 }
 
+// Interface for geocoding worker response
+interface GeocodeWorkerResponse {
+  success: boolean;
+  data?: SearchResult;
+  error?: string;
+}
+
 const geocodeAddress = async (address: string): Promise<SearchResult | null> => {
   try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`,
-      {
-        headers: {
-          'User-Agent': 'MapAgent/1.0 (Cloudflare Workers)'
-        }
-      }
-    )
+    // Use the deployed geocoding worker
+    const geocodingWorkerUrl = 'https://geocoding-worker.sunny-jyrm.workers.dev';
+    
+    const response = await fetch(geocodingWorkerUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ address }),
+    });
     
     if (!response.ok) {
-      throw new Error(`Geocoding API request failed: ${response.status} ${response.statusText}`)
+      throw new Error(`Geocoding worker request failed: ${response.status} ${response.statusText}`);
     }
     
-    const data: SearchResult[] = await response.json()
-    return data.length > 0 ? data[0] : null
+    const result: GeocodeWorkerResponse = await response.json();
+    
+    if (result.success && result.data) {
+      return result.data;
+    } else {
+      throw new Error(result.error || 'Geocoding worker returned no results');
+    }
   } catch (error) {
     // Re-throw with more context but preserve original error
     if (error instanceof Error) {
-      throw new Error(`Failed to geocode address "${address}": ${error.message}`)
+      throw new Error(`Failed to geocode address "${address}": ${error.message}`);
     } else {
-      throw new Error(`Failed to geocode address "${address}": Unknown error occurred`)
+      throw new Error(`Failed to geocode address "${address}": Unknown error occurred`);
     }
   }
 }
